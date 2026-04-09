@@ -17,7 +17,7 @@ from pyspark.sql.functions import (
     max as spark_max,
 )
 
-catalog = "hive_metastore"
+catalog = "workspace"
 silver_schema = "indicium_silver"
 bronze_schema = "indicium_bronze"
 gold_schema = "indicium_gold"

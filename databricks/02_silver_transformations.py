@@ -3,7 +3,7 @@
 
 from pyspark.sql.functions import col, lit, to_date, when, datediff
 
-catalog = "hive_metastore"
+catalog = "workspace"
 bronze_schema = "indicium_bronze"
 silver_schema = "indicium_silver"
 
