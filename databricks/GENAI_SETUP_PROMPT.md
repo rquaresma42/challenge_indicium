@@ -12,11 +12,11 @@ Contexto do projeto:
 - Delimitador dos CSVs: ;
 - Header: true
 - Formato de destino: Delta
-- Catálogo: hive_metastore
+- Catálogo: workspace
 - Schemas desejados:
-  - hive_metastore.indicium_bronze
-  - hive_metastore.indicium_silver
-  - hive_metastore.indicium_gold
+   - workspace.indicium_bronze
+   - workspace.indicium_silver
+   - workspace.indicium_gold
 
 Arquivos disponíveis na origem:
 - categories.csv

@@ -12,9 +12,9 @@ Este guia inicia o projeto no Databricks usando os CSVs da pasta local data/.
 No Databricks, abra um notebook e rode:
 
 ```python
-spark.sql("CREATE SCHEMA IF NOT EXISTS hive_metastore.indicium_bronze")
-spark.sql("CREATE SCHEMA IF NOT EXISTS hive_metastore.indicium_silver")
-spark.sql("CREATE SCHEMA IF NOT EXISTS hive_metastore.indicium_gold")
+spark.sql("CREATE SCHEMA IF NOT EXISTS workspace.indicium_bronze")
+spark.sql("CREATE SCHEMA IF NOT EXISTS workspace.indicium_silver")
+spark.sql("CREATE SCHEMA IF NOT EXISTS workspace.indicium_gold")
 ```
 
 ## 3. Subir os arquivos para o Databricks
@@ -72,9 +72,9 @@ No notebook 01, ajuste:
 Depois da carga Gold:
 
 ```python
-spark.table("hive_metastore.indicium_gold.fact_sales").count()
-spark.table("hive_metastore.indicium_gold.dim_product").count()
-spark.table("hive_metastore.indicium_gold.dim_customer").count()
+spark.table("workspace.indicium_gold.fact_sales").count()
+spark.table("workspace.indicium_gold.dim_product").count()
+spark.table("workspace.indicium_gold.dim_customer").count()
 ```
 
 ## 8. Conectar no Power BI
