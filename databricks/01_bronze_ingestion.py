@@ -4,13 +4,13 @@
 from pyspark.sql.functions import current_timestamp, input_file_name
 
 # Setup de destino
-catalog = "hive_metastore"
+catalog = "workspace"
 bronze_schema = "indicium_bronze"
 
 # Ajuste aqui conforme o local dos arquivos no DBFS.
-# Exemplo Metodo A (README): dbfs:/FileStore/indicium
-# Exemplo Metodo B (README): dbfs:/FileStore/indicium/data
-base_path = "dbfs:/FileStore/indicium"
+# Exemplo recomendado (Unity Catalog Volume): /Volumes/workspace/indicium_bronze/raw_data
+# Exemplo legado (DBFS FileStore): dbfs:/FileStore/indicium
+base_path = "/Volumes/workspace/indicium_bronze/raw_data"
 
 spark.sql(f"CREATE SCHEMA IF NOT EXISTS {catalog}.{bronze_schema}")
 

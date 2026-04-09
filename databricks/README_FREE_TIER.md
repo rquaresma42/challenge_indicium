@@ -20,14 +20,18 @@ spark.sql("CREATE SCHEMA IF NOT EXISTS hive_metastore.indicium_gold")
 ## 3. Subir os arquivos para o Databricks
 Voce pode usar um dos dois metodos abaixo.
 
+Como voce ja carregou no Volume, o caminho recomendado para este projeto e:
+- /Volumes/workspace/indicium_bronze/raw_data
+
+Os notebooks ja estao preparados com esse caminho por padrao.
+
 ### Metodo A (UI - mais simples)
-1. No Databricks, abra Catalog/DBFS browser (ou Data) e navegue ate `dbfs:/FileStore/indicium/`.
-2. Se a pasta nao existir, crie.
-3. Faça upload de todos os CSVs da pasta local data/ para essa pasta.
+1. No Databricks, abra Catalog e navegue ate workspace > indicium_bronze > Volumes > raw_data.
+2. Faça upload de todos os CSVs da pasta local data/ para esse volume.
 4. Valide com:
 
 ```python
-display(dbutils.fs.ls("dbfs:/FileStore/indicium/"))
+display(dbutils.fs.ls("/Volumes/workspace/indicium_bronze/raw_data"))
 ```
 
 ### Metodo B (CLI - opcional)
@@ -45,8 +49,8 @@ display(dbutils.fs.ls("dbfs:/FileStore/indicium/data/"))
 ```
 
 Observacao:
-- No Metodo A os arquivos costumam ficar em `dbfs:/FileStore/indicium/arquivo.csv`.
-- No Metodo B acima, podem ficar em `dbfs:/FileStore/indicium/data/arquivo.csv`.
+- No setup recomendado com Volume: /Volumes/workspace/indicium_bronze/raw_data/arquivo.csv.
+- No Metodo B (CLI) acima, os arquivos podem ficar em dbfs:/FileStore/indicium/data/arquivo.csv.
 
 ## 4. Importar notebooks deste repositorio
 Arquivos prontos para importar no workspace Databricks:
@@ -61,7 +65,7 @@ Arquivos prontos para importar no workspace Databricks:
 
 ## 6. Parametros importantes
 No notebook 01, ajuste:
-- `base_path` para onde os CSVs realmente ficaram (ex.: `dbfs:/FileStore/indicium`)
+- `base_path` para onde os CSVs realmente ficaram (ex.: /Volumes/workspace/indicium_bronze/raw_data)
 - `catalog` e schemas se quiser outro nome
 
 ## 7. Checagens rapidas
