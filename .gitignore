@@ -17,3 +17,7 @@ Thumbs.db
 # Data artifacts
 *.parquet
 *.delta
+
+# Power BI project local artifacts
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
