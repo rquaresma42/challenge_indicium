@@ -6,24 +6,24 @@ model Model
 		legacyRedirects
 		returnErrorValuesAsNull
 
-annotation __PBI_TimeIntelligenceEnabled = 1
+annotation __PBI_TimeIntelligenceEnabled = 0
 
 annotation PBI_ProTooling = ["DevMode"]
 
-ref cultureInfo en-US
+annotation PBI_QueryOrder = ["DatabricksServerHost","DatabricksHttpPath","DatabricksCatalog","DatabricksSchema","DatabricksGetTable","fact_sales","dim_date","dim_product","dim_category","dim_customer","dim_employee","dim_shipper","dim_territory","dim_region","bridge_employee_territory","calculations"]
 
-ref expression DatabricksServerHost
-ref expression DatabricksHttpPath
-ref expression DatabricksCatalog
-ref expression DatabricksSchema
-ref expression fact_sales
-ref expression dim_date
-ref expression dim_product
-ref expression dim_category
-ref expression dim_customer
-ref expression dim_employee
-ref expression dim_shipper
-ref expression dim_territory
-ref expression dim_region
-ref expression bridge_employee_territory
+ref table fact_sales
+ref table dim_date
+ref table dim_product
+ref table dim_category
+ref table dim_customer
+ref table dim_employee
+ref table dim_shipper
+ref table dim_territory
+ref table dim_region
+ref table bridge_employee_territory
+ref table calculations
+ref table visao
+
+ref cultureInfo en-US
 

@@ -1,0 +1,67 @@
+table dim_customer
+	lineageTag: 89f0c3fd-b873-44f1-91e2-30b77f364e3e
+
+	column customer_id
+		dataType: string
+		lineageTag: 0248682e-cb04-4419-afa7-327e61a77531
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column company_name
+		dataType: string
+		lineageTag: 31f3167d-08c4-4d88-aae1-1111cface0ed
+		summarizeBy: none
+		sourceColumn: company_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column contact_name
+		dataType: string
+		lineageTag: 33fd1321-7334-4281-be8c-6d42fa573028
+		summarizeBy: none
+		sourceColumn: contact_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column contact_title
+		dataType: string
+		lineageTag: 74e8980b-70a9-465f-9c3a-71df24ad6ba7
+		summarizeBy: none
+		sourceColumn: contact_title
+
+		annotation SummarizationSetBy = Automatic
+
+	column city
+		dataType: string
+		lineageTag: ec81ae46-c92c-45f1-a232-e5be2fafa2a5
+		summarizeBy: none
+		sourceColumn: city
+
+		annotation SummarizationSetBy = Automatic
+
+	column region
+		dataType: string
+		lineageTag: 1d7d766b-e9a0-471e-91eb-eb6e0fc8d80f
+		summarizeBy: none
+		sourceColumn: region
+
+		annotation SummarizationSetBy = Automatic
+
+	column country
+		dataType: string
+		lineageTag: 8af4744f-45a5-4200-9436-bc54c77d6cfc
+		summarizeBy: none
+		sourceColumn: country
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_customer = m
+		mode: import
+		source = DatabricksGetTable("dim_customer")
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

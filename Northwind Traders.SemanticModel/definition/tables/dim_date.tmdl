@@ -1,0 +1,112 @@
+table dim_date
+	lineageTag: c67207f9-6dac-4a6f-ab63-452038fc7b80
+
+	column date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 5d5ffb66-2057-444b-8ac6-be627eca4915
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 611a68d2-b254-4e50-bc96-96617afe9da8
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: ab560a87-4670-42cf-bb58-f9cd9db5ad32
+		summarizeBy: none
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column quarter
+		dataType: int64
+		formatString: 0
+		lineageTag: 2eeb9a8e-cc82-4e33-b43e-020bcaf5443e
+		summarizeBy: none
+		sourceColumn: quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column month
+		dataType: int64
+		formatString: 0
+		lineageTag: 0bafdd29-8114-45be-9531-502d0a63d010
+		summarizeBy: none
+		sourceColumn: month
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_name
+		dataType: string
+		lineageTag: 57947d59-7a75-49a5-9b80-ec3fc62e90b4
+		summarizeBy: none
+		sourceColumn: month_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column day
+		dataType: int64
+		formatString: 0
+		lineageTag: ee7dc137-3b7b-4b53-ac6a-e50b870cf331
+		summarizeBy: none
+		sourceColumn: day
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_week
+		dataType: int64
+		formatString: 0
+		lineageTag: 1a82ca68-8c6e-4176-843e-6414e57b8ecd
+		summarizeBy: none
+		sourceColumn: day_of_week
+
+		annotation SummarizationSetBy = Automatic
+
+	column year_month
+		dataType: string
+		lineageTag: 042585e7-7a4a-4625-abeb-169b0a479c6f
+		summarizeBy: none
+		sourceColumn: year_month
+		sortByColumn: year_month_numeric
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_weekday
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 44f11c55-e0d7-4f59-9451-7b26f6251cf8
+		summarizeBy: none
+		sourceColumn: is_weekday
+
+		annotation SummarizationSetBy = Automatic
+
+	column year_month_numeric
+		dataType: string
+		lineageTag: 8536c825-3698-464f-a74c-39c6acdf542a
+		summarizeBy: none
+		sourceColumn: year_month_numeric
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_date = m
+		mode: import
+		source = DatabricksGetTable("dim_date")
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

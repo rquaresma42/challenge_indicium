@@ -1,0 +1,222 @@
+table calculations
+	lineageTag: 90015593-9da9-4d74-9dc7-cb74634b05be
+
+	measure 'Receita Liquida' = SUM(fact_sales[net_sales])
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		displayFolder: 01 Visao Executiva
+		lineageTag: 0a45fe74-87b6-4244-bd24-9f9f27ccb37d
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Receita Bruta' = SUM(fact_sales[gross_sales])
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		displayFolder: 01 Visao Executiva
+		lineageTag: 6b616bf1-55b2-4739-9fb2-e35019ceda10
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure Pedidos = DISTINCTCOUNT(fact_sales[order_id])
+		formatString: #,##0
+		displayFolder: 01 Visao Executiva
+		lineageTag: 68272f60-bec0-45cb-b9db-f236e85f1487
+
+	measure 'Ticket Medio' = DIVIDE([Receita Liquida], [Pedidos])
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		displayFolder: 01 Visao Executiva
+		lineageTag: 78186ab7-ca01-4a7f-9315-cd81fbd4b124
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Clientes Ativos' = DISTINCTCOUNT(fact_sales[customer_id])
+		formatString: #,##0
+		displayFolder: 01 Visao Executiva
+		lineageTag: 2199c577-73fe-4343-9428-b5ee4d8d2ba4
+
+	measure 'Itens Vendidos' = SUM(fact_sales[quantity])
+		formatString: #,##0
+		displayFolder: 02 Ticket e Mix
+		lineageTag: d1d74b74-4e29-4f84-ae4a-3c5e891bb5d8
+
+	measure 'Itens por Pedido' = DIVIDE([Itens Vendidos], [Pedidos])
+		formatString: 0.00
+		displayFolder: 02 Ticket e Mix
+		lineageTag: 972307d8-da9a-4728-8b0a-25bdf43fff60
+
+	measure 'Desconto Concedido' = SUM(fact_sales[discount_value])
+		formatString: $ #,##0.00
+		displayFolder: 02 Ticket e Mix
+		lineageTag: f993adae-3cbc-412b-b815-40bba00366a3
+
+	measure 'Desconto Medio %' = DIVIDE([Desconto Concedido], [Receita Bruta])
+		formatString: 0.00%
+		displayFolder: 02 Ticket e Mix
+		lineageTag: a42cd768-7fb1-4716-94ab-39753a13ad25
+
+	measure 'Produtos Vendidos' = DISTINCTCOUNT(fact_sales[product_id])
+		formatString: #,##0
+		displayFolder: 02 Ticket e Mix
+		lineageTag: 7e3e947b-2d41-4180-b1de-687ee689959d
+
+	measure 'Receita por Cliente' = DIVIDE([Receita Liquida], [Clientes Ativos])
+		formatString: $ #,##0.00
+		displayFolder: 02 Ticket e Mix
+		lineageTag: e828d365-aab1-4737-bfa1-a7fa34410b60
+
+	measure 'Receita Top 10 Produtos' =
+			CALCULATE(
+				[Receita Liquida],
+				TOPN(10, ALL(dim_product[product_name]), [Receita Liquida], DESC)
+			)
+		formatString: $ #,##0.00
+		displayFolder: 02 Ticket e Mix
+		lineageTag: 78354442-31c6-4729-b8da-68adb1acebe5
+
+	measure 'Clientes Ativos Periodo Anterior' = CALCULATE([Clientes Ativos], DATEADD(dim_date[date], -1, MONTH))
+		formatString: #,##0
+		displayFolder: 03 Clientes e Churn
+		lineageTag: 1c6c1ccb-e2cb-4b5b-be50-50ed3cdb3426
+
+	measure 'Clientes Novos' =
+			VAR ClientesPeriodo = VALUES(fact_sales[customer_id])
+			VAR ClientesAntes =
+				CALCULATETABLE(
+					VALUES(fact_sales[customer_id]),
+					FILTER(ALL(dim_date[date]), dim_date[date] < MIN(dim_date[date]))
+				)
+			RETURN COUNTROWS(EXCEPT(ClientesPeriodo, ClientesAntes))
+		formatString: #,##0
+		displayFolder: 03 Clientes e Churn
+		lineageTag: c32b24ae-bef5-45b6-b6cb-c16f8d72bb07
+
+	measure 'Clientes em Risco (90d)' =
+			VAR DataRef = MAX(dim_date[date])
+			RETURN
+				COUNTROWS(
+					FILTER(
+						VALUES(fact_sales[customer_id]),
+						DATEDIFF(CALCULATE(MAX(fact_sales[order_date])), DataRef, DAY) > 90
+					)
+				)
+		formatString: #,##0
+		displayFolder: 03 Clientes e Churn
+		lineageTag: c39e034d-fffc-4413-9be8-d4db16608852
+
+	measure 'Taxa de Retencao Clientes' =
+			VAR ClientesAtual = VALUES(fact_sales[customer_id])
+			VAR ClientesAnterior = CALCULATETABLE(VALUES(fact_sales[customer_id]), DATEADD(dim_date[date], -1, MONTH))
+			VAR ClientesRetidos = COUNTROWS(INTERSECT(ClientesAtual, ClientesAnterior))
+			VAR BaseAnterior = COUNTROWS(ClientesAnterior)
+			RETURN DIVIDE(ClientesRetidos, BaseAnterior)
+		formatString: 0.00%
+		displayFolder: 03 Clientes e Churn
+		lineageTag: ba75b4be-6067-428b-b788-1703f8735d43
+
+	measure 'Receita de Clientes em Risco' =
+			VAR DataRef = MAX(dim_date[date])
+			VAR ClientesRisco =
+				FILTER(
+					VALUES(fact_sales[customer_id]),
+					DATEDIFF(CALCULATE(MAX(fact_sales[order_date])), DataRef, DAY) > 90
+				)
+			RETURN CALCULATE([Receita Liquida], KEEPFILTERS(ClientesRisco))
+		formatString: $ #,##0.00
+		displayFolder: 03 Clientes e Churn
+		lineageTag: cf4654d8-fcd2-4f82-bb56-97322b921107
+
+	measure 'Receita por Vendedor' = [Receita Liquida]
+		formatString: $ #,##0.00
+		displayFolder: 04 Comercial e Territorio
+		lineageTag: c910fa58-9aa5-411e-b72b-83a52391c13f
+
+	measure 'Pedidos por Vendedor' = [Pedidos]
+		formatString: #,##0
+		displayFolder: 04 Comercial e Territorio
+		lineageTag: 7ee11602-ac0e-47aa-9509-1c1f7d3654b5
+
+	measure 'Ticket Medio por Vendedor' = [Ticket Medio]
+		formatString: $ #,##0.00
+		displayFolder: 04 Comercial e Territorio
+		lineageTag: 504173f7-e16f-496f-b54f-6b20ae8f1222
+
+	measure 'Receita por Territorio' =
+			VAR FuncionariosTerritorio = VALUES(bridge_employee_territory[employee_id])
+			RETURN CALCULATE([Receita Liquida], TREATAS(FuncionariosTerritorio, fact_sales[employee_id]))
+		formatString: $ #,##0.00
+		displayFolder: 04 Comercial e Territorio
+		lineageTag: c0ad7b3d-9e11-4227-8f7f-6a9a2881b622
+
+	measure 'Pedidos por Territorio' =
+			VAR FuncionariosTerritorio = VALUES(bridge_employee_territory[employee_id])
+			RETURN CALCULATE([Pedidos], TREATAS(FuncionariosTerritorio, fact_sales[employee_id]))
+		formatString: #,##0
+		displayFolder: 04 Comercial e Territorio
+		lineageTag: 731a8db0-47c4-4d37-934f-2e8ee77fab99
+
+	measure '% Participacao Receita Vendedor' =
+			DIVIDE(
+				[Receita por Vendedor],
+				CALCULATE([Receita Liquida], ALL(dim_employee))
+			)
+		formatString: 0.00%
+		displayFolder: 04 Comercial e Territorio
+		lineageTag: 87d7e2fb-b445-4a3a-9fa9-18cfa1e37277
+
+	measure 'Pedidos no Prazo' = CALCULATE([Pedidos], fact_sales[shipped_on_time_flag] = TRUE())
+		formatString: #,##0
+		displayFolder: 05 Logistica
+		lineageTag: a0e9429a-9a46-4db1-a755-65c6d490f9ed
+
+	measure 'Pedidos em Atraso' = CALCULATE([Pedidos], fact_sales[shipped_on_time_flag] = FALSE())
+		formatString: #,##0
+		displayFolder: 05 Logistica
+		lineageTag: 85ead83a-6b88-4d64-b96a-91618273ab4d
+
+	measure '% Entregas no Prazo' = DIVIDE([Pedidos no Prazo], [Pedidos no Prazo] + [Pedidos em Atraso])
+		formatString: 0.00%
+		displayFolder: 05 Logistica
+		lineageTag: 45dafcef-f46d-4355-979c-920bb522df73
+
+	measure 'Atraso Medio (dias)' =
+			AVERAGEX(
+				FILTER(fact_sales, NOT ISBLANK(fact_sales[shipping_delay_days])),
+				fact_sales[shipping_delay_days]
+			)
+		formatString: 0.00
+		displayFolder: 05 Logistica
+		lineageTag: 58814e9d-a323-4106-a501-30af136114e0
+
+	measure 'Atraso Maximo (dias)' = MAX(fact_sales[shipping_delay_days])
+		formatString: 0
+		displayFolder: 05 Logistica
+		lineageTag: 0278c7ba-2ce3-4485-b51d-b04eec853a47
+
+	measure 'Receita Impactada por Atraso' = CALCULATE([Receita Liquida], fact_sales[shipped_on_time_flag] = FALSE())
+		formatString: $ #,##0.00
+		displayFolder: 05 Logistica
+		lineageTag: 77892048-e281-4465-b17a-1e98d9b84338
+
+	measure 'Pedidos com Atraso > 5 dias' = CALCULATE([Pedidos], fact_sales[shipping_delay_days] > 5)
+		formatString: #,##0
+		displayFolder: 05 Logistica
+		lineageTag: 884e494c-e2a0-4111-b078-21617f6484df
+
+	column calculations
+		dataType: string
+		lineageTag: 968f5ff2-324b-45af-972c-f79a2316452d
+		summarizeBy: none
+		sourceColumn: calculations
+
+		annotation SummarizationSetBy = Automatic
+
+	partition calculations = m
+		mode: import
+		source =
+				let
+				    Source = ""
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+

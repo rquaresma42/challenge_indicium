@@ -1,0 +1,100 @@
+table dim_product
+	lineageTag: 3e9450ec-2501-4036-9145-12720f26a497
+
+	column product_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 903959ec-20b7-4a08-8fe3-b6c27375a7bb
+		summarizeBy: none
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_name
+		dataType: string
+		lineageTag: d8c663bd-72b5-4b76-ac40-d3066c2bc600
+		summarizeBy: none
+		sourceColumn: product_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column supplier_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 4b990f21-79c8-429f-bab4-6ea4501546a6
+		summarizeBy: sum
+		sourceColumn: supplier_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column category_id
+		dataType: int64
+		formatString: 0
+		lineageTag: bef7dccc-b011-4f39-b5ca-f1d210d4aa7e
+		summarizeBy: none
+		sourceColumn: category_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column quantity_per_unit
+		dataType: string
+		lineageTag: 659aa2a5-c3b4-44ee-832d-35af4fdfb238
+		summarizeBy: none
+		sourceColumn: quantity_per_unit
+
+		annotation SummarizationSetBy = Automatic
+
+	column list_price
+		dataType: double
+		lineageTag: 7eaf446f-cc4f-4ee0-a184-c0d7434d2432
+		summarizeBy: sum
+		sourceColumn: list_price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column units_in_stock
+		dataType: int64
+		formatString: 0
+		lineageTag: 6eadce9d-3d69-4b25-9b7e-2358ceea6b0d
+		summarizeBy: sum
+		sourceColumn: units_in_stock
+
+		annotation SummarizationSetBy = Automatic
+
+	column units_on_order
+		dataType: int64
+		formatString: 0
+		lineageTag: 3febc09d-f5e6-42bf-9728-d549022ebfc6
+		summarizeBy: sum
+		sourceColumn: units_on_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column reorder_level
+		dataType: int64
+		formatString: 0
+		lineageTag: 6b68e1fd-0e11-4ef8-bdc5-1072cc5f33b7
+		summarizeBy: sum
+		sourceColumn: reorder_level
+
+		annotation SummarizationSetBy = Automatic
+
+	column discontinued
+		dataType: int64
+		formatString: 0
+		lineageTag: 7f2d4ba7-d8b1-433c-9658-406d580f3db3
+		summarizeBy: sum
+		sourceColumn: discontinued
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_product = m
+		mode: import
+		source = DatabricksGetTable("dim_product")
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

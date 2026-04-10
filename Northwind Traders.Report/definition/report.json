@@ -24,6 +24,19 @@
           }
         }
       }
+    ],
+    "outspacePane": [
+      {
+        "properties": {
+          "expanded": {
+            "expr": {
+              "Literal": {
+                "Value": "false"
+              }
+            }
+          }
+        }
+      }
     ]
   },
   "resourcePackages": [
@@ -35,6 +48,22 @@
           "name": "CY26SU02",
           "path": "BaseThemes/CY26SU02.json",
           "type": "BaseTheme"
+        }
+      ]
+    },
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "Captura_de_tela_2026-04-09_20121279825645237394.png",
+          "path": "Captura_de_tela_2026-04-09_20121279825645237394.png",
+          "type": "Image"
+        },
+        {
+          "name": "filter5954835683464816.png",
+          "path": "filter5954835683464816.png",
+          "type": "Image"
         }
       ]
     }

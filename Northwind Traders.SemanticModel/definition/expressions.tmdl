@@ -1,97 +1,46 @@
 expression DatabricksServerHost = "dbc-cc8a11a0-58fa.cloud.databricks.com" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: c4bcbb81-d02e-4634-814e-7def4b49cf14
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
 
 expression DatabricksHttpPath = "/sql/1.0/warehouses/81e240b6020332e2" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 6d57221f-1612-48d1-9a59-5719e29f7340
+
+	annotation PBI_ResultType = Text
 
 expression DatabricksCatalog = "workspace" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 0e0d0739-735c-4609-96f8-701c2bc06d22
+
+	annotation PBI_ResultType = Text
 
 expression DatabricksSchema = "indicium_gold" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: b4c6e547-5a33-4aab-8f76-e6e2e88f3637
 
-expression fact_sales =
-        let
-            Source = Databricks.Catalogs(DatabricksServerHost, DatabricksHttpPath),
-            CatalogData = Source{[Name=DatabricksCatalog,Kind="Catalog"]}[Data],
-            SchemaData = CatalogData{[Name=DatabricksSchema,Kind="Database"]}[Data],
-            TableData = SchemaData{[Name="fact_sales",Kind="Table"]}[Data]
-        in
-            TableData
+	annotation PBI_ResultType = Text
 
-expression dim_date =
-        let
-            Source = Databricks.Catalogs(DatabricksServerHost, DatabricksHttpPath),
-            CatalogData = Source{[Name=DatabricksCatalog,Kind="Catalog"]}[Data],
-            SchemaData = CatalogData{[Name=DatabricksSchema,Kind="Database"]}[Data],
-            TableData = SchemaData{[Name="dim_date",Kind="Table"]}[Data]
-        in
-            TableData
+expression DatabricksGetTable =
+		(TableName as text) as table =>
+		let
+		    Source = Databricks.Catalogs(DatabricksServerHost, DatabricksHttpPath),
+		    CatalogRowTry =
+		        try Source{[Name=DatabricksCatalog, Kind="Catalog"]}
+		        otherwise try Source{[Name=DatabricksCatalog, Kind="Database"]}
+		        otherwise try Source{[Name=DatabricksCatalog]}
+		        otherwise null,
+		    CatalogData = if CatalogRowTry = null then Source else CatalogRowTry[Data],
+		    SchemaRowTry =
+		        try CatalogData{[Name=DatabricksSchema, Kind="Schema"]}
+		        otherwise try CatalogData{[Name=DatabricksSchema, Kind="Database"]}
+		        otherwise try CatalogData{[Name=DatabricksSchema]}
+		        otherwise null,
+		    SchemaData = if SchemaRowTry = null then CatalogData else SchemaRowTry[Data],
+		    TableRow =
+		        try SchemaData{[Name=TableName, Kind="Table"]}
+		        otherwise SchemaData{[Name=TableName]},
+		    TableData = TableRow[Data]
+		in
+		    TableData
+	lineageTag: 5c0648ae-51de-4e5f-beff-5306d7852eaa
 
-expression dim_product =
-        let
-            Source = Databricks.Catalogs(DatabricksServerHost, DatabricksHttpPath),
-            CatalogData = Source{[Name=DatabricksCatalog,Kind="Catalog"]}[Data],
-            SchemaData = CatalogData{[Name=DatabricksSchema,Kind="Database"]}[Data],
-            TableData = SchemaData{[Name="dim_product",Kind="Table"]}[Data]
-        in
-            TableData
-
-expression dim_category =
-        let
-            Source = Databricks.Catalogs(DatabricksServerHost, DatabricksHttpPath),
-            CatalogData = Source{[Name=DatabricksCatalog,Kind="Catalog"]}[Data],
-            SchemaData = CatalogData{[Name=DatabricksSchema,Kind="Database"]}[Data],
-            TableData = SchemaData{[Name="dim_category",Kind="Table"]}[Data]
-        in
-            TableData
-
-expression dim_customer =
-        let
-            Source = Databricks.Catalogs(DatabricksServerHost, DatabricksHttpPath),
-            CatalogData = Source{[Name=DatabricksCatalog,Kind="Catalog"]}[Data],
-            SchemaData = CatalogData{[Name=DatabricksSchema,Kind="Database"]}[Data],
-            TableData = SchemaData{[Name="dim_customer",Kind="Table"]}[Data]
-        in
-            TableData
-
-expression dim_employee =
-        let
-            Source = Databricks.Catalogs(DatabricksServerHost, DatabricksHttpPath),
-            CatalogData = Source{[Name=DatabricksCatalog,Kind="Catalog"]}[Data],
-            SchemaData = CatalogData{[Name=DatabricksSchema,Kind="Database"]}[Data],
-            TableData = SchemaData{[Name="dim_employee",Kind="Table"]}[Data]
-        in
-            TableData
-
-expression dim_shipper =
-        let
-            Source = Databricks.Catalogs(DatabricksServerHost, DatabricksHttpPath),
-            CatalogData = Source{[Name=DatabricksCatalog,Kind="Catalog"]}[Data],
-            SchemaData = CatalogData{[Name=DatabricksSchema,Kind="Database"]}[Data],
-            TableData = SchemaData{[Name="dim_shipper",Kind="Table"]}[Data]
-        in
-            TableData
-
-expression dim_territory =
-        let
-            Source = Databricks.Catalogs(DatabricksServerHost, DatabricksHttpPath),
-            CatalogData = Source{[Name=DatabricksCatalog,Kind="Catalog"]}[Data],
-            SchemaData = CatalogData{[Name=DatabricksSchema,Kind="Database"]}[Data],
-            TableData = SchemaData{[Name="dim_territory",Kind="Table"]}[Data]
-        in
-            TableData
-
-expression dim_region =
-        let
-            Source = Databricks.Catalogs(DatabricksServerHost, DatabricksHttpPath),
-            CatalogData = Source{[Name=DatabricksCatalog,Kind="Catalog"]}[Data],
-            SchemaData = CatalogData{[Name=DatabricksSchema,Kind="Database"]}[Data],
-            TableData = SchemaData{[Name="dim_region",Kind="Table"]}[Data]
-        in
-            TableData
-
-expression bridge_employee_territory =
-        let
-            Source = Databricks.Catalogs(DatabricksServerHost, DatabricksHttpPath),
-            CatalogData = Source{[Name=DatabricksCatalog,Kind="Catalog"]}[Data],
-            SchemaData = CatalogData{[Name=DatabricksSchema,Kind="Database"]}[Data],
-            TableData = SchemaData{[Name="bridge_employee_territory",Kind="Table"]}[Data]
-        in
-            TableData

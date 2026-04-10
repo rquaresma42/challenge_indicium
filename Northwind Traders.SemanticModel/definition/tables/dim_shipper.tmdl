@@ -1,0 +1,36 @@
+table dim_shipper
+	lineageTag: 8ae1811c-2be7-456d-9b31-fb6e5f9072fc
+
+	column shipper_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 2b109ef1-5fe6-4671-b093-0d9a2267e049
+		summarizeBy: none
+		sourceColumn: shipper_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column shipper_name
+		dataType: string
+		lineageTag: 259330be-4efc-4681-8613-ec4ed161db5f
+		summarizeBy: none
+		sourceColumn: shipper_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column shipper_phone
+		dataType: string
+		lineageTag: 44d6c60e-1ade-4213-a8fa-bd4275942a7d
+		summarizeBy: none
+		sourceColumn: shipper_phone
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_shipper = m
+		mode: import
+		source = DatabricksGetTable("dim_shipper")
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

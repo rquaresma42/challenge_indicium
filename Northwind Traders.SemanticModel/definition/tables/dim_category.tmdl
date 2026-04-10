@@ -1,0 +1,36 @@
+table dim_category
+	lineageTag: f182840d-0419-458d-ab61-1c94f129b628
+
+	column category_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 72c813df-f02e-4a83-ade7-1741141b4623
+		summarizeBy: none
+		sourceColumn: category_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column category_name
+		dataType: string
+		lineageTag: 8318b3d4-9c71-4654-81f2-c1deeff3bf0e
+		summarizeBy: none
+		sourceColumn: category_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column category_description
+		dataType: string
+		lineageTag: 7415e643-398e-4b93-be05-416c00d14de5
+		summarizeBy: none
+		sourceColumn: category_description
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_category = m
+		mode: import
+		source = DatabricksGetTable("dim_category")
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

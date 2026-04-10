@@ -1,0 +1,28 @@
+table bridge_employee_territory
+	lineageTag: b1495951-b6c6-48e9-8428-e519a2716350
+
+	column employee_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 42fefacd-d0e6-42f7-8795-5baf1864f79e
+		summarizeBy: none
+		sourceColumn: employee_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column territory_id
+		dataType: string
+		lineageTag: c6e766c2-5217-4c21-b79d-a55c7dc1023a
+		summarizeBy: none
+		sourceColumn: territory_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition bridge_employee_territory = m
+		mode: import
+		source = DatabricksGetTable("bridge_employee_territory")
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
