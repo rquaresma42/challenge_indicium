@@ -2,7 +2,7 @@
 
 ## Objective
 
-Technical challenge for the **Data Analyst / Analytics Engineer** position at Indicium. The goal is to demonstrate the ability to build a complete data pipeline — from ingesting data into Bronze/Silver/Gold layers on Databricks, to delivering an executive report in Power BI and Python — using historical data from the fictional company Northwind Traders (a food distributor).
+Technical challenge for the **Analytics Engineer** position at Indicium. The goal is to demonstrate the ability to build a complete data pipeline — from ingesting data into Bronze/Silver/Gold layers on Databricks, to delivering an executive report in Power BI and Python — using historical data from the fictional company Northwind Traders (a food distributor).
 
 ---
 
