@@ -29,7 +29,7 @@
               "queryRef": "fact_sales.shipped_on_time_flag",
               "nativeQueryRef": "shipped_on_time_flag",
               "active": true,
-              "displayName": "No Prazo"
+              "displayName": "On Time"
             }
           ]
         }

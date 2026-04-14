@@ -45,7 +45,7 @@
               "queryRef": "dim_employee.last_name",
               "nativeQueryRef": "last_name",
               "active": false,
-              "displayName": "Vendedor"
+              "displayName": "Salesperson"
             }
           ]
         },

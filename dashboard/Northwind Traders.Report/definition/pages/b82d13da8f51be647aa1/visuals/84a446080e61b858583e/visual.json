@@ -29,7 +29,7 @@
               "queryRef": "fact_sales.shipping_delay_days",
               "nativeQueryRef": "shipping_delay_days",
               "active": true,
-              "displayName": "Atraso (dias)"
+              "displayName": "Delay (days)"
             }
           ]
         }
