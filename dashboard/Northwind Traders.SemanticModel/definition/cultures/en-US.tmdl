@@ -1520,16 +1520,6 @@ cultureInfo en-US
 			            },
 			            "Weight": 0.476
 			          }
-			        },
-			        {
-			          "Desconto": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
 			        }
 			      ]
 			    },
@@ -2042,7 +2032,7 @@ cultureInfo en-US
 			          }
 			        },
 			        {
-			          "No Prazo": {
+			          "On Time": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -2081,7 +2071,7 @@ cultureInfo en-US
 			          }
 			        },
 			        {
-			          "Atraso (dias)": {
+			          "Delay (days)": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -4775,16 +4765,6 @@ cultureInfo en-US
 			          }
 			        },
 			        {
-			          "país": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        },
-			        {
 			          "Pais": {
 			            "State": "Suggested",
 			            "Source": {
@@ -5268,7 +5248,7 @@ cultureInfo en-US
 			          }
 			        },
 			        {
-			          "Vendedor": {
+			          "Salesperson": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -5936,7 +5916,7 @@ cultureInfo en-US
 			          }
 			        },
 			        {
-			          "Territorio": {
+			          "Territory": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
