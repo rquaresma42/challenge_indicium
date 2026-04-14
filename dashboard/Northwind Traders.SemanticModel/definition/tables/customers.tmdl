@@ -1,0 +1,49 @@
+table customers
+	lineageTag: a7de13ed-3c1c-41f9-baa8-91aa9c14c30a
+
+	column clientes
+		lineageTag: 4a73a4c5-9166-44c8-b110-411966ca4d44
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'clientes Order'
+
+		relatedColumnDetails
+			groupByColumn: 'clientes Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'clientes Fields'
+		isHidden
+		lineageTag: 378fbd2d-64d3-4590-8f58-46f7da4c9ee9
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'clientes Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'clientes Order'
+		isHidden
+		formatString: 0
+		lineageTag: db6e97eb-66b5-4d8c-8037-aac58e591055
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition customers = calculated
+		mode: import
+		source =
+				{
+				    ("Active Customers", NAMEOF('calculations'[Active Customers]), 0),
+				    ("At-Risk Customers (90d)", NAMEOF('calculations'[At-Risk Customers (90d)]), 1),
+				    ("New Customers", NAMEOF('calculations'[New Customers]), 2)
+				}
+
+	annotation PBI_Id = 5afcba774ba44827a5066d0d58207cc0
+

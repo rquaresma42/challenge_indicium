@@ -1,0 +1,27 @@
+table hist_inactivity
+	lineageTag: c3d4e5f6-a7b8-9012-cdef-012345678901
+
+	column range_inactivity
+		lineageTag: bd6defab-9830-4571-b051-0a0157be0136
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [range_inactivity]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition hist_inactivity = calculated
+		mode: import
+		source =
+				DATATABLE(
+					"range_inactivity", STRING,
+					{
+						{"1) 0-30 days"},
+						{"2) 31-60 days"},
+						{"3) 61-90 days"},
+						{"4) 91-180 days"},
+						{"5) 180+ days"}
+					}
+				)
+
+	annotation PBI_Id = f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1
+

@@ -1,0 +1,29 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: pt-BR
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_ProTooling = ["DevMode","MCP-PBIModeling"]
+
+annotation PBI_QueryOrder = ["DatabricksServerHost","DatabricksHttpPath","DatabricksCatalog","DatabricksSchema","DatabricksGetTable","fact_sales","dim_calendar","dim_product","dim_customer","dim_employee","dim_territory","bridge_employee_territory","calculations"]
+
+ref table fact_sales
+ref table dim_calendar
+ref table dim_product
+ref table dim_customer
+ref table dim_employee
+ref table dim_territory
+ref table bridge_employee_territory
+ref table calculations
+ref table measure_chosen
+ref table customers
+ref table hist_inactivity
+ref table hist_orders
+
+ref cultureInfo en-US
+

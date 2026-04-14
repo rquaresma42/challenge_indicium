@@ -1,0 +1,296 @@
+table calculations
+	lineageTag: 90015593-9da9-4d74-9dc7-cb74634b05be
+
+	measure 'Net Revenue' = SUM(fact_sales[net_sales])
+		formatString: "R$"\ #,0;-"R$"\ #,0;"R$"\ #,0
+		displayFolder: 01 Visao Executiva
+		lineageTag: 0a45fe74-87b6-4244-bd24-9f9f27ccb37d
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Gross Revenue' = SUM(fact_sales[gross_sales])
+		formatString: "R$"\ #,0;-"R$"\ #,0;"R$"\ #,0
+		displayFolder: 01 Visao Executiva
+		lineageTag: 6b616bf1-55b2-4739-9fb2-e35019ceda10
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure Orders = DISTINCTCOUNT(fact_sales[order_id])
+		formatString: 0
+		displayFolder: 01 Visao Executiva
+		lineageTag: 68272f60-bec0-45cb-b9db-f236e85f1487
+
+	measure 'Avg Order Value' = DIVIDE([Net Revenue], [Orders])
+		formatString: "R$"\ #,0;-"R$"\ #,0;"R$"\ #,0
+		displayFolder: 01 Visao Executiva
+		lineageTag: 78186ab7-ca01-4a7f-9315-cd81fbd4b124
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Active Customers' =
+			VAR DataRef = MAXX(ALL(fact_sales), fact_sales[order_date])
+			VAR Inicio6M = EDATE(DataRef, -6) + 1
+			RETURN
+			    CALCULATE(
+			        DISTINCTCOUNT(fact_sales[customer_id]),
+			        REMOVEFILTERS(dim_calendar),
+			        DATESBETWEEN(dim_calendar[date], Inicio6M, DataRef)
+			    )
+		formatString: 0
+		displayFolder: 01 Visao Executiva
+		lineageTag: 2199c577-73fe-4343-9428-b5ee4d8d2ba4
+
+	measure 'Prior Month Active Customers' =
+			VAR DataRef = MAX(fact_sales[order_date])
+			VAR InicioMesAtual = DATE(YEAR(DataRef), MONTH(DataRef), 1)
+			VAR InicioMesAnterior = EDATE(InicioMesAtual, -1)
+			VAR FimMesAnterior = EOMONTH(DataRef, -1)
+			RETURN
+				CALCULATE(
+					DISTINCTCOUNT(fact_sales[customer_id]),
+					FILTER(ALL(dim_calendar[date]), dim_calendar[date] >= InicioMesAnterior && dim_calendar[date] <= FimMesAnterior)
+				)
+		formatString: 0
+		displayFolder: 03 Clientes e Churn
+		lineageTag: 1c6c1ccb-e2cb-4b5b-be50-50ed3cdb3426
+
+	measure 'New Customers' =
+			VAR AllMax = MAXX(ALL(fact_sales), fact_sales[order_date])
+			VAR IsMonthFiltered = ISFILTERED(dim_calendar[year_month])
+			VAR PeriodEnd = IF(IsMonthFiltered, MAX(fact_sales[order_date]), AllMax)
+			VAR PeriodStart = IF(IsMonthFiltered, MIN(fact_sales[order_date]), DATE(YEAR(AllMax) - 1, MONTH(AllMax), 1))
+			VAR CurrentCustomers =
+				CALCULATETABLE(
+					VALUES(fact_sales[customer_id]),
+					REMOVEFILTERS(dim_calendar),
+					DATESBETWEEN(dim_calendar[date], PeriodStart, PeriodEnd)
+				)
+			VAR PriorCustomers =
+				CALCULATETABLE(
+					VALUES(fact_sales[customer_id]),
+					REMOVEFILTERS(dim_calendar),
+					DATESBETWEEN(dim_calendar[date], DATE(1900,1,1), PeriodStart - 1)
+				)
+			RETURN COALESCE(COUNTROWS(EXCEPT(CurrentCustomers, PriorCustomers)), 0)
+		formatString: 0
+		displayFolder: 03 Clientes e Churn
+		lineageTag: c32b24ae-bef5-45b6-b6cb-c16f8d72bb07
+
+	measure 'At-Risk Customers (90d)' =
+			VAR DataRef = MAXX(ALL(fact_sales), fact_sales[order_date])
+			RETURN
+			    COUNTROWS(
+			        FILTER(
+			            VALUES(fact_sales[customer_id]),
+			            VAR UltimaCompra =
+			                CALCULATE(
+			                    MAX(fact_sales[order_date]),
+			                    REMOVEFILTERS(dim_calendar)
+			                )
+			            VAR Dias = DATEDIFF(UltimaCompra, DataRef, DAY)
+			            RETURN
+			                NOT ISBLANK(UltimaCompra)
+			                    && Dias > 90
+			                    && Dias <= 180
+			        )
+			    )
+		formatString: 0
+		displayFolder: 03 Clientes e Churn
+		lineageTag: c39e034d-fffc-4413-9be8-d4db16608852
+
+	measure 'Customer Retention Rate' = DIVIDE([Retained Customers], [Prior Month Active Customers], 0)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 03 Clientes e Churn
+		lineageTag: ba75b4be-6067-428b-b788-1703f8735d43
+
+	measure 'Revenue by Territory' =
+			VAR FuncionariosTerritorio = VALUES(bridge_employee_territory[employee_id])
+			RETURN CALCULATE([Net Revenue], TREATAS(FuncionariosTerritorio, fact_sales[employee_id]))
+		formatString: Currency
+		displayFolder: 04 Comercial e Territorio
+		lineageTag: c0ad7b3d-9e11-4227-8f7f-6a9a2881b622
+
+	measure 'Orders by Territory' =
+			VAR FuncionariosTerritorio = VALUES(bridge_employee_territory[employee_id])
+			RETURN CALCULATE([Orders], TREATAS(FuncionariosTerritorio, fact_sales[employee_id]))
+		formatString: 0
+		displayFolder: 04 Comercial e Territorio
+		lineageTag: 731a8db0-47c4-4d37-934f-2e8ee77fab99
+
+	measure 'On-Time Orders' = CALCULATE([Orders], fact_sales[shipped_on_time_flag] = TRUE())
+		formatString: 0
+		displayFolder: 05 Logistica
+		lineageTag: a0e9429a-9a46-4db1-a755-65c6d490f9ed
+
+	measure 'Late Orders' = CALCULATE([Orders], fact_sales[shipped_on_time_flag] = FALSE())
+		formatString: 0
+		displayFolder: 05 Logistica
+		lineageTag: 85ead83a-6b88-4d64-b96a-91618273ab4d
+
+	measure 'On-Time Delivery %' = DIVIDE([On-Time Orders], [On-Time Orders] + [Late Orders])
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 05 Logistica
+		lineageTag: 45dafcef-f46d-4355-979c-920bb522df73
+
+	measure 'Avg Delay (days)' =
+			AVERAGEX(
+				FILTER(fact_sales, NOT ISBLANK(fact_sales[shipping_delay_days]) && fact_sales[shipped_on_time_flag] = FALSE()),
+				fact_sales[shipping_delay_days]
+			)
+		formatString: 0.00
+		displayFolder: 05 Logistica
+		lineageTag: 58814e9d-a323-4106-a501-30af136114e0
+
+	measure 'Revenue Impacted by Delay' = CALCULATE([Net Revenue], fact_sales[shipped_on_time_flag] = FALSE())
+		formatString: "R$"\ #,0;-"R$"\ #,0;"R$"\ #,0
+		displayFolder: 05 Logistica
+		lineageTag: 77892048-e281-4465-b17a-1e98d9b84338
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'On-Time Delivery Target' = 0.95
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 05 Logistica
+		lineageTag: 1f4c4d5d-b8eb-4f35-9cc2-0f5f0e6b9d1f
+
+	measure 'Retained Customers' =
+			VAR DataRef = MAX(fact_sales[order_date])
+			VAR InicioMesAtual = DATE(YEAR(DataRef), MONTH(DataRef), 1)
+			VAR FimMesAtual = EOMONTH(DataRef, 0)
+			VAR InicioMesAnterior = EDATE(InicioMesAtual, -1)
+			VAR FimMesAnterior = EOMONTH(DataRef, -1)
+			VAR ClientesAtual =
+				CALCULATETABLE(
+					VALUES(fact_sales[customer_id]),
+					REMOVEFILTERS(dim_calendar),
+					DATESBETWEEN(dim_calendar[date], InicioMesAtual, FimMesAtual)
+				)
+			VAR ClientesAnterior =
+				CALCULATETABLE(
+					VALUES(fact_sales[customer_id]),
+					REMOVEFILTERS(dim_calendar),
+					DATESBETWEEN(dim_calendar[date], InicioMesAnterior, FimMesAnterior)
+				)
+			RETURN COUNTROWS(INTERSECT(ClientesAtual, ClientesAnterior))
+		formatString: 0
+		displayFolder: 03 Clientes e Churn
+		lineageTag: 91e8aef6-6d1a-4f4f-9d0a-2bc7be7af79c
+
+	measure 'Lost Customers' =
+			
+			VAR InicioMesAtual =
+			    MIN(dim_calendar[date])
+			VAR FimMesAtual =
+			    EOMONTH(InicioMesAtual, 0)
+			VAR InicioJanela =
+			    EDATE(InicioMesAtual, -6)
+			VAR FimJanela =
+			    EOMONTH(InicioMesAtual, -1)
+			
+			VAR ClientesAtual =
+			    CALCULATETABLE(
+			        VALUES(fact_sales[customer_id]),
+			        REMOVEFILTERS(dim_calendar),
+			        DATESBETWEEN(dim_calendar[date], InicioMesAtual, FimMesAtual)
+			    )
+			VAR ClientesJanela =
+			    CALCULATETABLE(
+			        VALUES(fact_sales[customer_id]),
+			        REMOVEFILTERS(dim_calendar),
+			        DATESBETWEEN(dim_calendar[date], InicioJanela, FimJanela)
+			    )
+			
+			RETURN
+			    COUNTROWS(EXCEPT(ClientesJanela, ClientesAtual))
+		formatString: 0
+		displayFolder: 03 Clientes e Churn
+		lineageTag: 0c5b28c8-8e34-4e8a-88ab-1e9c4fd2b92a
+
+	measure 'Customers by Inactivity Band' =
+			VAR DataMax = MAXX(ALL(fact_sales), fact_sales[order_date])
+			VAR Range = SELECTEDVALUE(hist_inactivity[range_inactivity])
+			RETURN
+				IF(
+					ISBLANK(Range), BLANK(),
+					COUNTROWS(
+						FILTER(
+							SUMMARIZE(ALL(fact_sales), fact_sales[customer_id]),
+							VAR uc = CALCULATE(MAX(fact_sales[order_date]))
+							VAR days = IF(ISBLANK(uc), 999, DATEDIFF(uc, DataMax, DAY))
+							RETURN
+								SWITCH(
+									TRUE(),
+									days <= 30, "1) 0-30 days",
+									days <= 60, "2) 31-60 days",
+									days <= 90, "3) 61-90 days",
+									days <= 180, "4) 91-180 days",
+									"5) 180+ days"
+								) = Range
+						)
+					)
+				)
+		formatString: 0
+		displayFolder: 03 Clientes e Churn
+		lineageTag: f1a2b3c4-d5e6-7890-abcd-ef1234567890
+
+	measure 'Customers by Order Band' =
+			VAR Faixa = SELECTEDVALUE(hist_orders[range_orders])
+			RETURN
+			    IF(
+			        ISBLANK(Faixa), BLANK(),
+			        COUNTROWS(
+			            FILTER(
+			                SUMMARIZE(ALL(fact_sales), fact_sales[customer_id]),
+			                VAR n = CALCULATE(DISTINCTCOUNT(fact_sales[order_id]))
+			                RETURN
+			                    SWITCH(
+			                        TRUE(),
+			                        n = 1, "1) 1 order",
+			                        n <= 3, "2) 2-3 orders",
+			                        n <= 6, "3) 4-6 orders",
+			                        n <= 10, "4) 7-10 orders",
+			                        "5) 11+ orders"
+			                    ) = Faixa
+			            )
+			        )
+			    )
+		formatString: 0
+		displayFolder: 03 Clientes e Churn
+		lineageTag: a2b3c4d5-e6f7-8901-bcde-f01234567890
+
+	measure 'Active Customers by Month' =
+			VAR DataRef = MAX(dim_calendar[date])
+			VAR Inicio6M = EDATE(DataRef, -6) + 1
+			RETURN
+			    CALCULATE(
+			        DISTINCTCOUNT(fact_sales[customer_id]),
+			        REMOVEFILTERS(dim_calendar),
+			        DATESBETWEEN(dim_calendar[date], Inicio6M, DataRef)
+			    )
+		formatString: 0
+		displayFolder: 03 Clientes e Churn
+		lineageTag: 0e5146e5-a3b4-403b-9bf4-d92eb97e0c63
+
+	column calculations
+		dataType: string
+		isHidden
+		lineageTag: 968f5ff2-324b-45af-972c-f79a2316452d
+		summarizeBy: none
+		sourceColumn: calculations
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition calculations = m
+		mode: import
+		source =
+				let
+				    Source = ""
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+

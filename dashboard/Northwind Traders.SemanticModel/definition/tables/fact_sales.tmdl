@@ -1,0 +1,242 @@
+table fact_sales
+	lineageTag: 6c8efa6a-5576-49a6-ba6d-5e3af543c3fc
+
+	column order_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 26ae3c60-ea2d-44a6-9044-278839bc9122
+		summarizeBy: sum
+		sourceColumn: order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 54c75a54-8e72-49cf-8683-b2891c463763
+		summarizeBy: none
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_id
+		dataType: string
+		lineageTag: e818d0fe-2153-41b9-af91-58093adff83e
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column employee_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 273daae6-8e9e-4ee1-b4c6-20b5bc6f1393
+		summarizeBy: none
+		sourceColumn: employee_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column shipper_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 66b5b4f7-c808-4c16-b464-048f4d8ee015
+		summarizeBy: sum
+		sourceColumn: shipper_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: ebf3824a-b495-4415-a9b3-915a7f32aba1
+		summarizeBy: none
+		sourceColumn: order_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column order_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: f09d7789-6eaf-4c8a-bcf1-b5b4ce26ec05
+		summarizeBy: none
+		sourceColumn: order_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column required_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 8e8076cb-5c31-4a4f-8410-f56cef78b808
+		summarizeBy: none
+		sourceColumn: required_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column shipped_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 980dd2c7-6f26-40c5-97a6-fc42f45c66e2
+		summarizeBy: none
+		sourceColumn: shipped_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column ship_country
+		dataType: string
+		lineageTag: 218a352c-d058-429b-88d0-57ff70987e3b
+		summarizeBy: none
+		sourceColumn: ship_country
+
+		annotation SummarizationSetBy = Automatic
+
+	column ship_region
+		dataType: string
+		lineageTag: c7a8d40b-cd3a-4a55-8ce0-be271eb62c96
+		summarizeBy: none
+		sourceColumn: ship_region
+
+		annotation SummarizationSetBy = Automatic
+
+	column ship_city
+		dataType: string
+		lineageTag: 2ad59229-9282-4ad6-8898-531cbc603300
+		summarizeBy: none
+		sourceColumn: ship_city
+
+		annotation SummarizationSetBy = Automatic
+
+	column unit_price
+		dataType: double
+		formatString: Currency
+		lineageTag: 39ba2da2-537f-4d6d-bc47-de56cafc2538
+		summarizeBy: sum
+		sourceColumn: unit_price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: 3f720883-e209-4316-ae1d-dfd12d2afc2a
+		summarizeBy: sum
+		sourceColumn: quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column discount
+		dataType: double
+		lineageTag: bc8cd786-7e93-4d2a-b725-28e1c2cd31dd
+		summarizeBy: sum
+		sourceColumn: discount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column gross_sales
+		dataType: double
+		formatString: Currency
+		lineageTag: 220437c4-6766-43ea-9896-cd556ae7023e
+		summarizeBy: sum
+		sourceColumn: gross_sales
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column discount_value
+		dataType: double
+		formatString: Currency
+		lineageTag: f3af0682-050b-4503-9a0d-e8ab04e873b5
+		summarizeBy: sum
+		sourceColumn: discount_value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column net_sales
+		dataType: double
+		formatString: Currency
+		lineageTag: 09380a6a-3638-44fc-bd3a-9c4d1b9f9fea
+		summarizeBy: sum
+		sourceColumn: net_sales
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column shipped_on_time_flag
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 7441ce2c-a64e-4ce9-9bd6-7d02283b35e1
+		summarizeBy: none
+		sourceColumn: shipped_on_time_flag
+
+		annotation SummarizationSetBy = Automatic
+
+	column shipping_delay_days
+		dataType: int64
+		formatString: 0
+		lineageTag: 41426e3f-b126-449c-a242-4c7f4e472b23
+		summarizeBy: sum
+		sourceColumn: shipping_delay_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column employee_first_name
+		dataType: string
+		lineageTag: 39694512-47e9-452d-b897-618b62a08717
+		summarizeBy: none
+		sourceColumn: employee_first_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column employee_last_name
+		dataType: string
+		lineageTag: 9d5cddca-675e-4b69-b7c5-a1c64a78ac90
+		summarizeBy: none
+		sourceColumn: employee_last_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column employee_title
+		dataType: string
+		lineageTag: 83579b17-926b-478a-9dca-4d49383d97e1
+		summarizeBy: none
+		sourceColumn: employee_title
+
+		annotation SummarizationSetBy = Automatic
+
+	column shipper_name
+		dataType: string
+		lineageTag: 8def9276-ad5a-4ec8-bfc0-bec6097ab1b4
+		summarizeBy: none
+		sourceColumn: shipper_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column shipper_phone
+		dataType: string
+		lineageTag: b8a0145a-8470-4bbe-b98d-f2da7efab2b9
+		summarizeBy: none
+		sourceColumn: shipper_phone
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_sales = m
+		mode: import
+		source = DatabricksGetTable("fact_sales")
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

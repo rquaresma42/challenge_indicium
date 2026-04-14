@@ -1,0 +1,44 @@
+table dim_territory
+	lineageTag: 40d6586d-7971-4785-9eba-a9620ca1c727
+
+	column territory_id
+		dataType: string
+		lineageTag: 48ca1971-e0b2-4afc-a596-02de03376465
+		summarizeBy: none
+		sourceColumn: territory_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column territory_description
+		dataType: string
+		lineageTag: 8015959a-df71-478f-82c9-385d715e6dda
+		summarizeBy: none
+		sourceColumn: territory_description
+
+		annotation SummarizationSetBy = Automatic
+
+	column region_id
+		dataType: int64
+		formatString: 0
+		lineageTag: afebfc04-2d1f-49dd-b2ac-648741ed719b
+		summarizeBy: none
+		sourceColumn: region_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column region_description
+		dataType: string
+		lineageTag: cec2f3a7-0af8-4f06-ac23-5bd6ef1b2af6
+		summarizeBy: none
+		sourceColumn: region_description
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_territory = m
+		mode: import
+		source = DatabricksGetTable("dim_territory")
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

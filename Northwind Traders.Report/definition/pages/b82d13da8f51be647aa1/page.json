@@ -1,8 +1,0 @@
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
-  "name": "b82d13da8f51be647aa1",
-  "displayName": "Eficiência Logística e Nível de Serviço",
-  "displayOption": "FitToPage",
-  "height": 720,
-  "width": 1280
-}

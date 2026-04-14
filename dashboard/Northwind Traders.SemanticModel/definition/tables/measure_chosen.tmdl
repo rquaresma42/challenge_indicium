@@ -1,0 +1,49 @@
+table measure_chosen
+	lineageTag: 2b2b0651-cc78-448d-8b30-358214b89ff2
+
+	column visao
+		lineageTag: a252215c-ec7b-42a5-a288-8275e7257cfd
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'visao Order'
+
+		relatedColumnDetails
+			groupByColumn: 'visao Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'visao Fields'
+		isHidden
+		lineageTag: 9fb22d7c-b473-4b73-9c8f-61fb2b75a62e
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'visao Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'visao Order'
+		isHidden
+		formatString: 0
+		lineageTag: c41abb6d-bea7-43d2-9efa-7774d46297c1
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition measure_chosen = calculated
+		mode: import
+		source =
+				{
+				    ("Net Revenue", NAMEOF('calculations'[Net Revenue]), 0),
+				    ("Avg Order Value", NAMEOF('calculations'[Avg Order Value]), 1),
+				    ("Orders", NAMEOF('calculations'[Orders]), 2)
+				}
+
+	annotation PBI_Id = c4982926d6b44139a28c04688188ea90
+

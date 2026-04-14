@@ -1,0 +1,25 @@
+relationship AutoDetected_76be3d5f-5fc7-41d3-958e-2901ce2a9c9e
+	fromColumn: fact_sales.product_id
+	toColumn: dim_product.product_id
+
+relationship AutoDetected_c383a8e4-efd2-42d6-ab52-cb06420a483c
+	fromColumn: fact_sales.customer_id
+	toColumn: dim_customer.customer_id
+
+relationship AutoDetected_ab89ef73-4a59-4566-a122-452da212b812
+	fromColumn: fact_sales.employee_id
+	toColumn: dim_employee.employee_id
+
+relationship AutoDetected_64a52f58-d9db-4b49-8ba9-56a74ce8f23b
+	crossFilteringBehavior: bothDirections
+	fromColumn: bridge_employee_territory.employee_id
+	toColumn: dim_employee.employee_id
+
+relationship AutoDetected_cdaeb30a-a5c4-4b35-92fb-6a415fbb9f94
+	fromColumn: bridge_employee_territory.territory_id
+	toColumn: dim_territory.territory_id
+
+relationship rel_fact_sales_dim_date
+	fromColumn: fact_sales.order_date_key
+	toColumn: dim_calendar.date_key
+
