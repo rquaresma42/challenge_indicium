@@ -27,9 +27,9 @@
                 }
               },
               "queryRef": "dim_customer.country",
-              "nativeQueryRef": "país",
+              "nativeQueryRef": "country",
               "active": true,
-              "displayName": "país"
+              "displayName": "country"
             },
             {
               "field": {
@@ -76,7 +76,7 @@
                       "Entity": "measure_chosen"
                     }
                   },
-                  "Property": "visao"
+                  "Property": "metric"
                 }
               },
               "index": 0,

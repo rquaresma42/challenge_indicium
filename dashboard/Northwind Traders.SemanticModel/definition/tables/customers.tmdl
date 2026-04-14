@@ -1,23 +1,23 @@
 table customers
 	lineageTag: a7de13ed-3c1c-41f9-baa8-91aa9c14c30a
 
-	column clientes
+	column customers
 		lineageTag: 4a73a4c5-9166-44c8-b110-411966ca4d44
 		summarizeBy: none
 		sourceColumn: [Value1]
-		sortByColumn: 'clientes Order'
+		sortByColumn: 'customers Order'
 
 		relatedColumnDetails
-			groupByColumn: 'clientes Fields'
+			groupByColumn: 'customers Fields'
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'clientes Fields'
+	column 'customers Fields'
 		isHidden
 		lineageTag: 378fbd2d-64d3-4590-8f58-46f7da4c9ee9
 		summarizeBy: none
 		sourceColumn: [Value2]
-		sortByColumn: 'clientes Order'
+		sortByColumn: 'customers Order'
 
 		extendedProperty ParameterMetadata =
 				{
@@ -27,7 +27,7 @@ table customers
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'clientes Order'
+	column 'customers Order'
 		isHidden
 		formatString: 0
 		lineageTag: db6e97eb-66b5-4d8c-8037-aac58e591055

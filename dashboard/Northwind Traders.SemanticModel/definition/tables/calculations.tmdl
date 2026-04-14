@@ -28,27 +28,27 @@ table calculations
 		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
 
 	measure 'Active Customers' =
-			VAR DataRef = MAXX(ALL(fact_sales), fact_sales[order_date])
-			VAR Inicio6M = EDATE(DataRef, -6) + 1
+			VAR ref_date = MAXX(ALL(fact_sales), fact_sales[order_date])
+			VAR start_6m = EDATE(ref_date, -6) + 1
 			RETURN
 			    CALCULATE(
 			        DISTINCTCOUNT(fact_sales[customer_id]),
 			        REMOVEFILTERS(dim_calendar),
-			        DATESBETWEEN(dim_calendar[date], Inicio6M, DataRef)
+			        DATESBETWEEN(dim_calendar[date], start_6m, ref_date)
 			    )
 		formatString: 0
 		displayFolder: 01 Executive Overview
 		lineageTag: 2199c577-73fe-4343-9428-b5ee4d8d2ba4
 
 	measure 'Prior Month Active Customers' =
-			VAR DataRef = MAX(fact_sales[order_date])
-			VAR InicioMesAtual = DATE(YEAR(DataRef), MONTH(DataRef), 1)
-			VAR InicioMesAnterior = EDATE(InicioMesAtual, -1)
-			VAR FimMesAnterior = EOMONTH(DataRef, -1)
+			VAR ref_date = MAX(fact_sales[order_date])
+			VAR current_month_start = DATE(YEAR(ref_date), MONTH(ref_date), 1)
+			VAR prior_month_start = EDATE(current_month_start, -1)
+			VAR prior_month_end = EOMONTH(ref_date, -1)
 			RETURN
 				CALCULATE(
 					DISTINCTCOUNT(fact_sales[customer_id]),
-					FILTER(ALL(dim_calendar[date]), dim_calendar[date] >= InicioMesAnterior && dim_calendar[date] <= FimMesAnterior)
+					FILTER(ALL(dim_calendar[date]), dim_calendar[date] >= prior_month_start && dim_calendar[date] <= prior_month_end)
 				)
 		formatString: 0
 		displayFolder: 03 Customers and Churn
@@ -77,21 +77,21 @@ table calculations
 		lineageTag: c32b24ae-bef5-45b6-b6cb-c16f8d72bb07
 
 	measure 'At-Risk Customers (90d)' =
-			VAR DataRef = MAXX(ALL(fact_sales), fact_sales[order_date])
+			VAR ref_date = MAXX(ALL(fact_sales), fact_sales[order_date])
 			RETURN
 			    COUNTROWS(
 			        FILTER(
 			            VALUES(fact_sales[customer_id]),
-			            VAR UltimaCompra =
+			            VAR last_purchase_date =
 			                CALCULATE(
 			                    MAX(fact_sales[order_date]),
 			                    REMOVEFILTERS(dim_calendar)
 			                )
-			            VAR Dias = DATEDIFF(UltimaCompra, DataRef, DAY)
+			            VAR days_since = DATEDIFF(last_purchase_date, ref_date, DAY)
 			            RETURN
-			                NOT ISBLANK(UltimaCompra)
-			                    && Dias > 90
-			                    && Dias <= 180
+			                NOT ISBLANK(last_purchase_date)
+			                    && days_since > 90
+			                    && days_since <= 180
 			        )
 			    )
 		formatString: 0
@@ -104,15 +104,15 @@ table calculations
 		lineageTag: ba75b4be-6067-428b-b788-1703f8735d43
 
 	measure 'Revenue by Territory' =
-			VAR FuncionariosTerritorio = VALUES(bridge_employee_territory[employee_id])
-			RETURN CALCULATE([Net Revenue], TREATAS(FuncionariosTerritorio, fact_sales[employee_id]))
+			VAR territory_employees = VALUES(bridge_employee_territory[employee_id])
+			RETURN CALCULATE([Net Revenue], TREATAS(territory_employees, fact_sales[employee_id]))
 		formatString: Currency
 		displayFolder: 04 Commercial and Territory
 		lineageTag: c0ad7b3d-9e11-4227-8f7f-6a9a2881b622
 
 	measure 'Orders by Territory' =
-			VAR FuncionariosTerritorio = VALUES(bridge_employee_territory[employee_id])
-			RETURN CALCULATE([Orders], TREATAS(FuncionariosTerritorio, fact_sales[employee_id]))
+			VAR territory_employees = VALUES(bridge_employee_territory[employee_id])
+			RETURN CALCULATE([Orders], TREATAS(territory_employees, fact_sales[employee_id]))
 		formatString: 0
 		displayFolder: 04 Commercial and Territory
 		lineageTag: 731a8db0-47c4-4d37-934f-2e8ee77fab99
@@ -154,54 +154,54 @@ table calculations
 		lineageTag: 1f4c4d5d-b8eb-4f35-9cc2-0f5f0e6b9d1f
 
 	measure 'Retained Customers' =
-			VAR DataRef = MAX(fact_sales[order_date])
-			VAR InicioMesAtual = DATE(YEAR(DataRef), MONTH(DataRef), 1)
-			VAR FimMesAtual = EOMONTH(DataRef, 0)
-			VAR InicioMesAnterior = EDATE(InicioMesAtual, -1)
-			VAR FimMesAnterior = EOMONTH(DataRef, -1)
-			VAR ClientesAtual =
+			VAR ref_date = MAX(fact_sales[order_date])
+			VAR current_month_start = DATE(YEAR(ref_date), MONTH(ref_date), 1)
+			VAR current_month_end = EOMONTH(ref_date, 0)
+			VAR prior_month_start = EDATE(current_month_start, -1)
+			VAR prior_month_end = EOMONTH(ref_date, -1)
+			VAR current_customers =
 				CALCULATETABLE(
 					VALUES(fact_sales[customer_id]),
 					REMOVEFILTERS(dim_calendar),
-					DATESBETWEEN(dim_calendar[date], InicioMesAtual, FimMesAtual)
+					DATESBETWEEN(dim_calendar[date], current_month_start, current_month_end)
 				)
-			VAR ClientesAnterior =
+			VAR prior_customers =
 				CALCULATETABLE(
 					VALUES(fact_sales[customer_id]),
 					REMOVEFILTERS(dim_calendar),
-					DATESBETWEEN(dim_calendar[date], InicioMesAnterior, FimMesAnterior)
+					DATESBETWEEN(dim_calendar[date], prior_month_start, prior_month_end)
 				)
-			RETURN COUNTROWS(INTERSECT(ClientesAtual, ClientesAnterior))
+			RETURN COUNTROWS(INTERSECT(current_customers, prior_customers))
 		formatString: 0
 		displayFolder: 03 Customers and Churn
 		lineageTag: 91e8aef6-6d1a-4f4f-9d0a-2bc7be7af79c
 
 	measure 'Lost Customers' =
 			
-			VAR InicioMesAtual =
+			VAR current_month_start =
 			    MIN(dim_calendar[date])
-			VAR FimMesAtual =
-			    EOMONTH(InicioMesAtual, 0)
-			VAR InicioJanela =
-			    EDATE(InicioMesAtual, -6)
-			VAR FimJanela =
-			    EOMONTH(InicioMesAtual, -1)
+			VAR current_month_end =
+			    EOMONTH(current_month_start, 0)
+			VAR window_start =
+			    EDATE(current_month_start, -6)
+			VAR window_end =
+			    EOMONTH(current_month_start, -1)
 			
-			VAR ClientesAtual =
+			VAR current_customers =
 			    CALCULATETABLE(
 			        VALUES(fact_sales[customer_id]),
 			        REMOVEFILTERS(dim_calendar),
-			        DATESBETWEEN(dim_calendar[date], InicioMesAtual, FimMesAtual)
+			        DATESBETWEEN(dim_calendar[date], current_month_start, current_month_end)
 			    )
-			VAR ClientesJanela =
+			VAR window_customers =
 			    CALCULATETABLE(
 			        VALUES(fact_sales[customer_id]),
 			        REMOVEFILTERS(dim_calendar),
-			        DATESBETWEEN(dim_calendar[date], InicioJanela, FimJanela)
+			        DATESBETWEEN(dim_calendar[date], window_start, window_end)
 			    )
 			
 			RETURN
-			    COUNTROWS(EXCEPT(ClientesJanela, ClientesAtual))
+			    COUNTROWS(EXCEPT(window_customers, current_customers))
 		formatString: 0
 		displayFolder: 03 Customers and Churn
 		lineageTag: 0c5b28c8-8e34-4e8a-88ab-1e9c4fd2b92a
@@ -234,10 +234,10 @@ table calculations
 		lineageTag: f1a2b3c4-d5e6-7890-abcd-ef1234567890
 
 	measure 'Customers by Order Band' =
-			VAR Faixa = SELECTEDVALUE(hist_orders[range_orders])
+			VAR order_band = SELECTEDVALUE(hist_orders[range_orders])
 			RETURN
 			    IF(
-			        ISBLANK(Faixa), BLANK(),
+			        ISBLANK(order_band), BLANK(),
 			        COUNTROWS(
 			            FILTER(
 			                SUMMARIZE(ALL(fact_sales), fact_sales[customer_id]),
@@ -250,7 +250,7 @@ table calculations
 			                        n <= 6, "3) 4-6 orders",
 			                        n <= 10, "4) 7-10 orders",
 			                        "5) 11+ orders"
-			                    ) = Faixa
+			                    ) = order_band
 			            )
 			        )
 			    )
@@ -259,13 +259,13 @@ table calculations
 		lineageTag: a2b3c4d5-e6f7-8901-bcde-f01234567890
 
 	measure 'Active Customers by Month' =
-			VAR DataRef = MAX(dim_calendar[date])
-			VAR Inicio6M = EDATE(DataRef, -6) + 1
+			VAR ref_date = MAX(dim_calendar[date])
+			VAR start_6m = EDATE(ref_date, -6) + 1
 			RETURN
 			    CALCULATE(
 			        DISTINCTCOUNT(fact_sales[customer_id]),
 			        REMOVEFILTERS(dim_calendar),
-			        DATESBETWEEN(dim_calendar[date], Inicio6M, DataRef)
+			        DATESBETWEEN(dim_calendar[date], start_6m, ref_date)
 			    )
 		formatString: 0
 		displayFolder: 03 Customers and Churn

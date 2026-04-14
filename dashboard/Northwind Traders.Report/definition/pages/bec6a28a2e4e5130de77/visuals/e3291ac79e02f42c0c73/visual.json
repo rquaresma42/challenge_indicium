@@ -29,7 +29,7 @@
               "queryRef": "fact_sales.discount",
               "nativeQueryRef": "discount",
               "active": true,
-              "displayName": "Desconto"
+              "displayName": "Discount"
             }
           ]
         }

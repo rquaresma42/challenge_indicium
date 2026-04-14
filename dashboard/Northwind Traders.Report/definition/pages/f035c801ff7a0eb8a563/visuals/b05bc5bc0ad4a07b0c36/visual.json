@@ -243,21 +243,6 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "71a888df814ec7f0b8ee",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "calculations"
-              }
-            },
-            "Property": "Taxa de Churn (M-1 -> M)"
-          }
-        },
-        "type": "Advanced",
-        "howCreated": "User"
-      },
-      {
         "name": "c280616cdb4198d2578f",
         "field": {
           "Column": {

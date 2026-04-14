@@ -23,11 +23,11 @@
                       "Entity": "measure_chosen"
                     }
                   },
-                  "Property": "visao"
+                  "Property": "metric"
                 }
               },
-              "queryRef": "visao.visao",
-              "nativeQueryRef": "visao",
+              "queryRef": "metric.metric",
+              "nativeQueryRef": "metric",
               "active": true
             }
           ]
@@ -80,7 +80,7 @@
                                   "Source": "v"
                                 }
                               },
-                              "Property": "visao Fields"
+                              "Property": "metric Fields"
                             }
                           }
                         ],
@@ -105,7 +105,7 @@
                                   "Entity": "measure_chosen"
                                 }
                               },
-                              "Property": "visao"
+                              "Property": "metric"
                             }
                           }
                         ],
@@ -132,7 +132,7 @@
                                       "Entity": "measure_chosen"
                                     }
                                   },
-                                  "Property": "visao Fields"
+                                  "Property": "metric Fields"
                                 }
                               }
                             }

@@ -29,7 +29,7 @@
               "queryRef": "dim_territory.territory_description",
               "nativeQueryRef": "territory_description",
               "active": true,
-              "displayName": "Territorio"
+              "displayName": "Territory"
             }
           ]
         }

@@ -76,7 +76,7 @@
                       "Entity": "measure_chosen"
                     }
                   },
-                  "Property": "visao"
+                  "Property": "metric"
                 }
               },
               "index": 0,
